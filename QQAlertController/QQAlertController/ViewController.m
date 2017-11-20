@@ -29,19 +29,20 @@
 - (void)alertQQTest {
     
     QQAlertController *alertController = [QQAlertController qq_alertControllerWithTitle:@"温馨提示" message:@"您的计数还未提交，是否退出？" preferredStyle:QQAlertControllerStyleAlert animationType:QQAlertAnimationTypeShrink];
-//    QQAlertController *alertController = [QQAlertController qq_alertControllerWithTitle:@"温馨提示" message:@"您的计数还未提交，是否退出？" preferredStyle:QQAlertControllerStyleActionSheet animationType:QQAlertAnimationTypeShrink];
+//    QQAlertController *alertController = [QQAlertController qq_alertControllerWithTitle:@"温馨提示" message:@"您的计数还未提交，是否退出？" preferredStyle:QQAlertControllerStyleActionSheet animationType:QQAlertAnimationTypeRaiseUp];
+    
     // 默认超过2个按钮就垂直排列，想要超过2个按钮依然水平排列，修改水平排列的最大个数，只要没超过这个最大数，一律水平排列
     //    alertController.maxNumberOfActionHorizontalArrangementForAlert = 3;
     
-    QQAlertAction *ok = [QQAlertAction actionWithTitle:@"退出" style:QQAlertActionStyleDefault handler:^(QQAlertAction * _Nonnull action) {
+    QQAlertAction *ok = [QQAlertAction qq_actionWithTitle:@"退出" style:QQAlertActionStyleDefault handler:^(QQAlertAction * _Nonnull action) {
         NSLog(@"ok");
     }];
     
     // SPAlertActionStyleDestructive默认文字为红色(可修改)
-    QQAlertAction *action2 = [QQAlertAction actionWithTitle:@"第2个" style:QQAlertActionStyleDestructive handler:^(QQAlertAction * _Nonnull action) {
+    QQAlertAction *action2 = [QQAlertAction qq_actionWithTitle:@"第2个" style:QQAlertActionStyleDestructive handler:^(QQAlertAction * _Nonnull action) {
         NSLog(@"点击了第2个");
     }];
-    QQAlertAction *cancel = [QQAlertAction actionWithTitle:@"取消" style:QQAlertActionStyleCancel handler:^(QQAlertAction * _Nonnull action) {
+    QQAlertAction *cancel = [QQAlertAction qq_actionWithTitle:@"取消" style:QQAlertActionStyleCancel handler:^(QQAlertAction * _Nonnull action) {
         NSLog(@"cancel");
     }];
     

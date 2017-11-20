@@ -39,21 +39,10 @@ typedef NS_ENUM(NSInteger, QQBackgroundViewAppearanceStyle) {
 
 @interface QQAlertAction : NSObject <NSCopying>
 
-/**
- *  创建一个action
- *
- *  @param title    标题
- *  @param style    action样式
- *  @param handler  点击后的bolok回调
- */
-+ (instancetype)actionWithTitle:(nullable NSString *)title style:(QQAlertActionStyle)style handler:(void (^ __nullable)(QQAlertAction *action))handler;
++ (instancetype)qq_actionWithTitle:(nullable NSString *)title style:(QQAlertActionStyle)style handler:(void (^ __nullable)(QQAlertAction *action))handler;
 
-/* action的标题 */
 @property (nullable, nonatomic, readonly) NSString *title;
-/* 样式 */
 @property (nonatomic, readonly) QQAlertActionStyle style;
-/* 是否能点击,默认为YES,当为NO时，action的文字颜色为浅灰色，字体17号，且无法修改 */
-@property (nonatomic, getter=isEnabled) BOOL enabled;
 
 @end
 
@@ -68,25 +57,6 @@ typedef NS_ENUM(NSInteger, QQBackgroundViewAppearanceStyle) {
  *  @param animationType   动画类型
  */
 + (instancetype)qq_alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(QQAlertControllerStyle)preferredStyle animationType:(QQAlertAnimationType)animationType;
-
-/*
- 1.以下4个类方法均用于自定义,除了最后一个参数不一致之外,其余参数均一致;如果最后一个参数传nil,就跟第一个类方法等效.
- 2.QQAlertControllerStyleAlert样式下对话框的默认宽度恒为屏幕宽-40,高度最大为屏幕高-40,如果想设置对话框的宽度以及修改最大高度,可以通过调整maxMarginForAlert属性来设置,高度上只要没有超出最大高度，会自适应内容.
- 3.QQAlertControllerStyleActionSheet样式下对话框的默认宽度恒为屏幕宽,高度最大为屏幕高,外界无法通过任何属性修改宽度,最大高度可通过maxTopMarginForActionSheet属性来修改,高度上只要没超出最大高度,会自适应内容.
- 4.当自定义以下4个view时,如果宽度小于等于0,或者大于等于对话框的宽度,内部会自动处理为等宽于对话框,除此之外,自定义view的高度在对话框最大高度范围内的情况下:自定义view的大小是多大,显示出来就是多大;从这里也可以看出,如果自定义view时想用对话框的默认宽度,宽度设置为0或者足够大就行了. 稍微要注意的是假如你采用的是自动布局/xib/storyboard,宽度设置为0可能会有约束警告.
- */
-
-// 自定义整个对话框
-//+ (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(QQAlertControllerStyle)preferredStyle animationType:(QQAlertAnimationType)animationType customView:(nullable UIView *)customView;
-//
-//// 自定义headerView
-//+ (instancetype)alertControllerWithPreferredStyle:(QQAlertControllerStyle)preferredStyle animationType:(QQAlertAnimationType)animationType customHeaderView:(nullable UIView *)customHeaderView;
-//
-//// 自定义centerView
-//+ (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(QQAlertControllerStyle)preferredStyle animationType:(QQAlertAnimationType)animationType customCenterView:(nullable UIView *)customCenterView;
-//
-//// 自定义footerView
-//+ (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(QQAlertControllerStyle)preferredStyle animationType:(QQAlertAnimationType)animationType customFooterView:(nullable UIView *)customFooterView;
 
 /**
  *  添加action

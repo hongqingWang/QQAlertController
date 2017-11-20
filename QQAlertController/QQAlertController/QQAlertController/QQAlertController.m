@@ -46,6 +46,8 @@ static NSString * const FOOTERCELL = @"footerCell";
 @property (nonatomic, strong) UIColor *titleColor;
 /* action的标题字体 */
 @property (nonatomic, strong) UIFont *titleFont;
+/* 是否能点击,默认为YES,当为NO时，action的文字颜色为浅灰色，字体17号，且无法修改 */
+@property (nonatomic, getter=isEnabled) BOOL enabled;
 
 @property (nonatomic, assign) QQAlertActionStyle style;
 @property (nonatomic, copy) void (^handler)(QQAlertAction *action);
@@ -67,10 +69,10 @@ static NSString * const FOOTERCELL = @"footerCell";
     return action;
 }
 
-+ (instancetype)actionWithTitle:(nullable NSString *)title style:(QQAlertActionStyle)style handler:(void (^ __nullable)(QQAlertAction *action))handler {
++ (instancetype)qq_actionWithTitle:(nullable NSString *)title style:(QQAlertActionStyle)style handler:(void (^ __nullable)(QQAlertAction *action))handler {
+    
     QQAlertAction *action = [[self alloc] initWithTitle:title style:(QQAlertActionStyle)style handler:handler];
     return action;
-    
 }
 
 - (instancetype)initWithTitle:(nullable NSString *)title style:(QQAlertActionStyle)style handler:(void (^ __nullable)(QQAlertAction *action))handler {
@@ -97,26 +99,26 @@ static NSString * const FOOTERCELL = @"footerCell";
     return self;
 }
 
-- (void)setTitleColor:(UIColor *)titleColor {
-    _titleColor = titleColor;
-    if (self.propertyEvent) {
-        self.propertyEvent(self);
-    }
-}
+//- (void)setTitleColor:(UIColor *)titleColor {
+//    _titleColor = titleColor;
+//    if (self.propertyEvent) {
+//        self.propertyEvent(self);
+//    }
+//}
 
-- (void)setTitleFont:(UIFont *)titleFont {
-    _titleFont = titleFont;
-    if (self.propertyEvent) {
-        self.propertyEvent(self);
-    }
-}
+//- (void)setTitleFont:(UIFont *)titleFont {
+//    _titleFont = titleFont;
+//    if (self.propertyEvent) {
+//        self.propertyEvent(self);
+//    }
+//}
 
-- (void)setEnabled:(BOOL)enabled {
-    _enabled = enabled;
-    if (self.propertyEvent) {
-        self.propertyEvent(self);
-    }
-}
+//- (void)setEnabled:(BOOL)enabled {
+//    _enabled = enabled;
+//    if (self.propertyEvent) {
+//        self.propertyEvent(self);
+//    }
+//}
 
 @end
 
@@ -125,6 +127,7 @@ static NSString * const FOOTERCELL = @"footerCell";
 #pragma mark ---------------------------- QQAlertControllerActionCell begin --------------------------------
 
 @interface QQAlertControllerActionCell : UITableViewCell
+
 @property (nonatomic, strong) QQAlertAction *action;
 @property (nonatomic, weak) UILabel *titleLabel;
 @property (nonatomic, strong) NSMutableArray *titleLabelConstraints;
@@ -134,6 +137,7 @@ static NSString * const FOOTERCELL = @"footerCell";
 @implementation QQAlertControllerActionCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         
         self.backgroundColor = [UIColor clearColor];
@@ -154,6 +158,14 @@ static NSString * const FOOTERCELL = @"footerCell";
         } else {
             [self.contentView addSubview:titleLabel];
         }
+        
+        /**
+         * 设置分割线顶头对齐
+         */
+        self.preservesSuperviewLayoutMargins = NO;
+        self.separatorInset = UIEdgeInsetsZero;
+        self.layoutMargins = UIEdgeInsetsZero;
+        
         _titleLabel = titleLabel;
         
         _titleLabel.superview.backgroundColor = QQ_ALERT_BACKGROUND_COLOR_NORMAL;
@@ -337,24 +349,6 @@ static NSString * const FOOTERCELL = @"footerCell";
     QQAlertController *alertController = [[QQAlertController alloc] initWithTitle:title message:message preferredStyle:preferredStyle animationType:animationType customView:customView customHeaderView:nil customCenterView:nil customFooterView:nil];
     return alertController;
 }
-
-//+ (instancetype)alertControllerWithPreferredStyle:(QQAlertControllerStyle)preferredStyle animationType:(QQAlertAnimationType)animationType customHeaderView:(nullable UIView *)customHeaderView {
-//    // 创建控制器
-//    QQAlertController *alertController = [[QQAlertController alloc] initWithTitle:nil message:nil preferredStyle:preferredStyle animationType:animationType customView:nil customHeaderView:customHeaderView customCenterView:nil customFooterView:nil];
-//    return alertController;
-//}
-
-//+ (instancetype)alertControllerWithTitle:(NSString *)title message:(NSString *)message preferredStyle:(QQAlertControllerStyle)preferredStyle animationType:(QQAlertAnimationType)animationType customCenterView:(UIView *)customCenterView {
-//    // 创建控制器
-//    QQAlertController *alertController = [[QQAlertController alloc] initWithTitle:title message:message preferredStyle:preferredStyle animationType:animationType customView:nil customHeaderView:nil customCenterView:customCenterView customFooterView:nil];
-//    return alertController;
-//}
-//
-//+ (instancetype)alertControllerWithTitle:(NSString *)title message:(NSString *)message preferredStyle:(QQAlertControllerStyle)preferredStyle animationType:(QQAlertAnimationType)animationType customFooterView:(UIView *)customFooterView {
-//    // 创建控制器
-//    QQAlertController *alertController = [[QQAlertController alloc] initWithTitle:title message:message preferredStyle:preferredStyle animationType:animationType customView:nil customHeaderView:nil customCenterView:nil customFooterView:customFooterView];
-//    return alertController;
-//}
 
 // 添加action
 - (void)addAction:(QQAlertAction *)action {
@@ -608,6 +602,7 @@ static NSString * const FOOTERCELL = @"footerCell";
 }
 
 - (void)setupViewsOboutHeader:(UIView *)customHeaderView {
+    
     UIView *headerBezelView = [[UIView alloc] init];
     headerBezelView.translatesAutoresizingMaskIntoConstraints = NO;
     headerBezelView.backgroundColor = QQ_ALERT_BACKGROUND_COLOR_NORMAL;
@@ -1026,8 +1021,15 @@ static NSString * const FOOTERCELL = @"footerCell";
 }
 
 - (void)layoutCenter {
+    
     UIView *alertView = self.alertView;
+    /**
+     * 标题和副标题下面的分割线
+     */
     UIView *headerActionLine = self.headerActionLine;
+    /**
+     * 承载几个按钮的`View`
+     */
     UIView *actionBezelView = self.actionBezelView;
     UIView *actionCenterView = self.customCenterView ? self.customCenterView : self.actionCenterView;
     UIView *footerTopLine = self.footerTopLine;
